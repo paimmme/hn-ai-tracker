@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HN AI Tracker</title>
+<style>
+  :root {
+    --bg: #f6f6ef;
+    --surface: #ffffff;
+    --text: #2c2c2c;
+    --text2: #666;
+    --border: #e2e2e2;
+    --accent: #ff6600;
+    --accent2: #e05500;
+    --tag-bg: #fff3e6;
+    --tag-text: #cc5500;
+    --card-shadow: 0 1px 3px rgba(0,0,0,.08);
+    --header-bg: #ff6600;
+    --header-text: #fff;
+    --radius: 8px;
+    --max-w: 900px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a1a;
+      --surface: #242424;
+      --text: #e0e0e0;
+      --text2: #999;
+      --border: #333;
+      --accent: #ff7711;
+      --accent2: #ff8833;
+      --tag-bg: #332211;
+      --tag-text: #ffaa55;
+      --card-shadow: 0 1px 3px rgba(0,0,0,.3);
+      --header-bg: #cc5500;
+      --header-text: #fff;
+    }
+  }
+
+  .light { --bg: #f6f6ef; --surface: #ffffff; --text: #2c2c2c; --text2: #666; --border: #e2e2e2; --accent: #ff6600; --accent2: #e05500; --tag-bg: #fff3e6; --tag-text: #cc5500; --card-shadow: 0 1px 3px rgba(0,0,0,.08); --header-bg: #ff6600; --header-text: #fff; }
+  .dark { --bg: #1a1a1a; --surface: #242424; --text: #e0e0e0; --text2: #999; --border: #333; --accent: #ff7711; --accent2: #ff8833; --tag-bg: #332211; --tag-text: #ffaa55; --card-shadow: 0 1px 3px rgba(0,0,0,.3); --header-bg: #cc5500; --header-text: #fff; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background .2s, color .2s;
+  }
+
+  header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  header .inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  header h1 small {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: .8;
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn {
+    background: rgba(255,255,255,.2);
+    color: var(--header-text);
+    border: 1px solid rgba(255,255,255,.3);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: rgba(255,255,255,.35); }
+  .btn:active { transform: scale(.97); }
+  .btn-icon {
+    background: none;
+    border: none;
+    color: var(--header-text);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    opacity: .85;
+    transition: opacity .15s;
+  }
+  .btn-icon:hover { opacity: 1; }
+
+  .container {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 16px 20px;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .status {
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .status .count { color: var(--accent); font-weight: 600; }
+  .status .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  .status .dot.green { background: #22c55e; }
+  .status .dot.yellow { background: #eab308; }
+  .status .dot.red { background: #ef4444; }
+  .filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all .15s;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow .15s, transform .15s;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    transform: translateY(-1px);
+  }
+  .card-score {
+    flex-shrink: 0;
+    min-width: 48px;
+    text-align: center;
+    padding-top: 2px;
+  }
+  .card-score .num {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+  .card-score .label {
+    font-size: 10px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .card-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+  .card-title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .card-title a:hover { color: var(--accent); }
+  .card-meta {
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card-meta .author { color: var(--accent); font-weight: 500; }
+  .card-meta .sep { opacity: .4; }
+  .card-meta a {
+    color: var(--text2);
+    text-decoration: none;
+  }
+  .card-meta a:hover { color: var(--accent); }
+  .card-tags {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .tag {
+    font-size: 10px;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .tag.domain {
+    background: var(--border);
+    color: var(--text2);
+  }
+  .tag.ai { background: #e6f7e6; color: #2d7a2d; }
+  [data-theme=dark] .tag.ai { background: #1a331a; color: #66bb66; }
+
+  .footer {
+    margin-top: 32px;
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text2);
+  }
+  .loading .spinner {
+    display: inline-block;
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg {
+    background: #fef2f2;
+    color: #b91c1c;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 14px;
+  }
+  [data-theme=dark] .error-msg {
+    background: #2d1515;
+    color: #f87171;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text2);
+  }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 17px; flex-wrap: wrap; }
+    header h1 small { font-size: 11px; }
+    .card { padding: 12px 14px; gap: 10px; }
+    .card-score { min-width: 36px; }
+    .card-score .num { font-size: 14px; }
+    .card-title { font-size: 14px; }
+    .controls { flex-direction: column; align-items: stretch; }
+    .filter-group { justify-content: center; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<header>
+  <div class="inner">
+    <h1>
+      <span>HN AI Tracker</span>
+      <small>Hacker News AI 热点追踪</small>
+    </h1>
+    <div class="header-actions">
+      <button class="btn" id="refreshBtn" onclick="fetchAll()">⟳ 刷新</button>
+      <button class="btn-icon" id="themeToggle" onclick="toggleTheme()" title="切换主题">🌓</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <div class="status" id="statusBar">
+      <span class="dot green" id="statusDot"></span>
+      <span id="statusText">加载中...</span>
+    </div>
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">全部</button>
+      <button class="filter-btn" data-filter="hot" onclick="setFilter('hot')">🔥 热门 (&gt;100)</button>
+      <button class="filter-btn" data-filter="rising" onclick="setFilter('rising')">📈 上升 (&gt;30)</button>
+      <button class="filter-btn" data-filter="new" onclick="setFilter('new')">🕐 最新</button>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div>正在获取 HN AI 资讯...</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    数据来源: <a href="https://hn.algolia.com/api" target="_blank">HN Algolia API</a> · 
+    <a href="https://news.ycombinator.com" target="_blank">Hacker News</a> ·
+    每小时自动更新 · 开源项目
+  </div>
+</div>
+
+<script>
+const KEYWORDS = ['AI', 'artificial intelligence', 'LLM', 'GPT', 'machine learning', 'deep learning', 'AGI', 'openai', 'claude', 'gemini', 'neural network'];
+const API_BASE = 'https://hn.algolia.com/api/v1/search';
+const CACHE_KEY = 'hnai_cache';
+const CACHE_TTL = 5 * 60 * 1000; // 5 min
+let allStories = [];
+let currentFilter = 'all';
+let autoRefreshTimer = null;
+
+function getTheme() {
+  const saved = localStorage.getItem('hnai_theme');
+  if (saved) return saved;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  document.body.setAttribute('data-theme', theme);
+  document.body.className = theme;
+  localStorage.setItem('hnai_theme', theme);
+}
+
+function toggleTheme() {
+  const cur = document.body.className;
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+
+applyTheme(getTheme());
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(el => el.classList.toggle('active', el.dataset.filter === f));
+  renderStories();
+}
+
+function timeAgo(dateStr) {
+  const d = new Date(dateStr);
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return '刚刚';
+  if (diff < 3600) return Math.floor(diff/60) + ' 分钟前';
+  if (diff < 86400) return Math.floor(diff/3600) + ' 小时前';
+  if (diff < 2592000) return Math.floor(diff/86400) + ' 天前';
+  return d.toLocaleDateString('zh-CN');
+}
+
+function extractDomain(url) {
+  if (!url) return '';
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; }
+}
+
+function highlightKeyword(title) {
+  const kw = ['AI', 'LLM', 'GPT', 'AGI', 'OpenAI', 'Claude', 'Gemini', 'DeepMind', 'Transformer', 'Neural'];
+  let t = title;
+  for (const k of kw) {
+    const re = new RegExp(`\\b(${k})\\b`, 'gi');
+    t = t.replace(re, '<mark style="background:transparent;color:var(--accent);font-weight:700">$1</mark>');
+  }
+  return t;
+}
+
+function filterStories(stories) {
+  if (currentFilter === 'all') return stories;
+  if (currentFilter === 'hot') return stories.filter(s => s.points >= 100);
+  if (currentFilter === 'rising') return stories.filter(s => s.points >= 30);
+  if (currentFilter === 'new') {
+    const cutoff = Date.now() - 24 * 3600 * 1000;
+    return stories.filter(s => new Date(s.created_at).getTime() > cutoff).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  }
+  return stories;
+}
+
+function renderStories() {
+  const el = document.getElementById('content');
+  const filtered = filterStories(allStories);
+
+  if (filtered.length === 0) {
+    el.innerHTML = '<div class="empty">暂无结果</div>';
+    return;
+  }
+
+  el.innerHTML = '<div class="cards">' + filtered.map(s => {
+    const domain = extractDomain(s.url);
+    const titleHtml = highlightKeyword(s.title);
+    return `
+      <div class="card">
+        <div class="card-score">
+          <div class="num">${s.points || '-'}</div>
+          <div class="label">points</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">
+            <a href="${s.url || 'https://news.ycombinator.com/item?id=' + s.objectID}" target="_blank" rel="noopener">${titleHtml}</a>
+          </div>
+          <div class="card-meta">
+            <span class="author">${s.author}</span>
+            <span class="sep">·</span>
+            <span>${timeAgo(s.created_at)}</span>
+            <span class="sep">·</span>
+            <a href="https://news.ycombinator.com/item?id=${s.objectID}" target="_blank" rel="noopener">${s.num_comments || 0} 评论</a>
+            ${domain ? `<span class="sep">·</span><a href="${s.url}" target="_blank" rel="noopener">${domain}</a>` : ''}
+          </div>
+          <div class="card-tags">
+            ${domain ? `<span class="tag domain">${domain}</span>` : ''}
+            ${s.url ? '<span class="tag ai">external</span>' : '<span class="tag ai">HN</span>'}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('') + '</div>';
+}
+
+function updateStatus(text, ok) {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  dot.className = 'dot ' + (ok === true ? 'green' : ok === null ? 'yellow' : 'red');
+  txt.textContent = text;
+}
+
+async function fetchAll() {
+  const el = document.getElementById('content');
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.textContent = '⟳ 加载中...';
+  updateStatus('正在获取...', null);
+
+  try {
+    // Batch search multiple keywords, merge by objectID
+    const storyMap = new Map();
+    const promises = KEYWORDS.map(kw =>
+      fetch(`${API_BASE}?query=${encodeURIComponent(kw)}&tags=story&hitsPerPage=40`)
+        .then(r => r.json())
+        .then(d => d.hits || [])
+        .catch(() => [])
+    );
+    const results = await Promise.all(promises);
+
+    for (const hits of results) {
+      for (const s of hits) {
+        if (!storyMap.has(s.objectID)) {
+          storyMap.set(s.objectID, s);
+        } else {
+          // Keep higher points version
+          const existing = storyMap.get(s.objectID);
+          if ((s.points || 0) > (existing.points || 0)) {
+            storyMap.set(s.objectID, s);
+          }
+        }
+      }
+    }
+
+    allStories = Array.from(storyMap.values())
+      .filter(s => s.title && s.title.length > 0)
+      .sort((a, b) => (b.points || 0) - (a.points || 0));
+
+    // Cache
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ time: Date.now(), data: allStories }));
+    } catch {}
+
+    renderStories();
+    updateStatus(`共 ${allStories.length} 条 AI 资讯 · ${timeAgo(Date.now())} 更新`, true);
+  } catch (err) {
+    // Try cache fallback
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if (cached && cached.data.length) {
+        allStories = cached.data;
+        renderStories();
+        updateStatus(`离线缓存 ${allStories.length} 条（API 不可用）`, null);
+      } else {
+        throw err;
+      }
+    } catch {
+      el.innerHTML = `<div class="error-msg">获取失败: ${err.message || '网络错误'}</div>`;
+      updateStatus('获取失败', false);
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⟳ 刷新';
+  }
+}
+
+// Auto-refresh every 10 min
+function startAutoRefresh() {
+  if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+  autoRefreshTimer = setInterval(fetchAll, 10 * 60 * 1000);
+}
+
+// Initial load - show cache first, then fresh
+(function init() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (cached && cached.data && cached.data.length && Date.now() - cached.time < CACHE_TTL) {
+      allStories = cached.data;
+      renderStories();
+      updateStatus(`缓存 ${allStories.length} 条（后台刷新中...）`, null);
+    }
+  } catch {}
+  fetchAll();
+  startAutoRefresh();
+})();
+</script>
+</body>
+</html>
