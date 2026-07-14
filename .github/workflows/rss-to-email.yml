@@ -1,0 +1,23 @@
+name: AI RSS → 邮件推送
+
+on:
+  schedule:
+    # UTC 0/6/12 = CST 8/14/20
+    - cron: '0 0,6,12 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch-and-send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: 安装依赖
+        run: npm install rss-parser nodemailer
+      - name: 抓取 RSS 并发送邮件
+        run: node scripts/rss-to-email.mjs
+        env:
+          QQ_EMAIL: ${{ secrets.QQ_EMAIL }}
+          QQ_SMTP_PASS: ${{ secrets.QQ_SMTP_PASS }}
