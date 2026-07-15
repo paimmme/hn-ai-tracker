@@ -1,2 +1,4 @@
 node_modules/
 n8n-workflow.json
+dist/
+skills/data.json

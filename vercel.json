@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "buildCommand": null,
-  "outputDirectory": ".",
-  "framework": null
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/skills/(.*)", "destination": "/skills/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
