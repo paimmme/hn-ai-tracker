@@ -49,11 +49,18 @@ async function analyzeWithDeepSeek(articles) {
     source: a.source,
   }));
 
-  const prompt = `你是 AI 资讯分析师。以下是今日 ${articles.length} 篇科技/AI 文章。
+  const prompt = `你是一名在职 AI 工程师/研究员，正在给一位备战秋招的学生分享行业洞察。以下是今日 ${articles.length} 篇科技/AI 文章。
 
 请用中文完成：
+
 1. 今日要闻概览：选出 3-5 条最重要新闻，每条用中文一句话概括
-2. 对每篇文章提供中文分析：
+
+2. 求职风向标：结合今天新闻，从求职者视角分析
+   - 业界新趋势：今年值得关注的新方向/新技术栈
+   - 新需求涌现：哪些岗位技能需求在增长
+   - 给我的建议：针对秋招准备，学到什么、简历方向、面试重点等具体建议
+
+3. 对每篇文章提供中文分析：
    - 中文标题（意译，符合中文习惯）
    - 中文摘要（1-2 句概括核心）
    - 关键要点（2-3 条要点，每条10字以内）
@@ -63,6 +70,11 @@ async function analyzeWithDeepSeek(articles) {
   "highlights": [
     { "title": "中文标题", "summary": "一句话概括" }
   ],
+  "career_advice": {
+    "trends": ["新方向1", "新方向2"],
+    "demands": ["需求1", "需求2"],
+    "tips": ["建议1", "建议2"]
+  },
   "articles": [
     {
       "id": 0,
@@ -76,7 +88,7 @@ async function analyzeWithDeepSeek(articles) {
   const body = {
     model: DEEPSEEK_MODEL,
     messages: [
-      { role: 'system', content: '你是 AI 资讯分析师，输出严格 JSON。' },
+      { role: 'system', content: '你是一名在职 AI 从业者，用过来人视角给学生输出可操作的求职洞察，输出严格 JSON。' },
       { role: 'user', content: prompt + '\n\n文章列表：\n' + JSON.stringify(articlesForLLM, null, 2) },
     ],
     temperature: 0.3,
@@ -132,6 +144,7 @@ async function analyzeWithDeepSeek(articles) {
 
   return {
     highlights: parsed.highlights || [],
+    careerAdvice: parsed.career_advice || null,
     articleMap,
     usage: data?.usage,
   };
@@ -166,6 +179,31 @@ function buildHtml(topItems, aiResult) {
     <div style="font-size:13px;font-weight:600;color:#333;margin-bottom:2px">${escapeHtml(h.title)}</div>
     <div style="font-size:12px;color:#666">${escapeHtml(h.summary)}</div>
   </div>`).join('')}
+</div>`;
+  }
+
+  // ── Career advice section ──
+  if (aiResult?.careerAdvice) {
+    const ca = aiResult.careerAdvice;
+    html += `
+<!-- Career Advice -->
+<div style="background:linear-gradient(135deg,#f0f9ff,#fff);border-radius:8px;padding:16px;margin-bottom:16px;border:1px solid #bae6fd">
+  <h2 style="margin:0 0 12px;font-size:16px;color:#0369a1">🎯 求职风向标</h2>
+  ${ca.trends?.length ? `
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:600;color:#0284c7;margin-bottom:4px">📌 业界新趋势</div>
+    ${ca.trends.map(t => `<div style="font-size:12px;color:#444;margin-bottom:3px;padding-left:12px">• ${escapeHtml(t)}</div>`).join('')}
+  </div>` : ''}
+  ${ca.demands?.length ? `
+  <div style="margin-bottom:10px">
+    <div style="font-size:12px;font-weight:600;color:#0284c7;margin-bottom:4px">📌 新需求涌现</div>
+    ${ca.demands.map(d => `<div style="font-size:12px;color:#444;margin-bottom:3px;padding-left:12px">• ${escapeHtml(d)}</div>`).join('')}
+  </div>` : ''}
+  ${ca.tips?.length ? `
+  <div>
+    <div style="font-size:12px;font-weight:600;color:#0284c7;margin-bottom:4px">📌 给我的建议</div>
+    ${ca.tips.map(t => `<div style="font-size:12px;color:#444;margin-bottom:3px;padding-left:12px">• ${escapeHtml(t)}</div>`).join('')}
+  </div>` : ''}
 </div>`;
   }
 
