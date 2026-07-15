@@ -1,5 +1,6 @@
 import RssParser from 'rss-parser';
 import nodemailer from 'nodemailer';
+import { fetchJobs } from './fetch-jobs.mjs';
 
 const FEEDS = [
   // English — research & engineering
@@ -41,7 +42,7 @@ function truncate(s, max) {
 
 // ─── DeepSeek AI analysis ────────────────────────────────────────
 
-async function analyzeWithDeepSeek(articles) {
+async function analyzeWithDeepSeek(articles, jobs = []) {
   if (!DEEPSEEK_API_KEY) {
     console.log('  ! DEEPSEEK_API_KEY 未设置，跳过 AI 分析');
     return null;
@@ -54,7 +55,30 @@ async function analyzeWithDeepSeek(articles) {
     source: a.source,
   }));
 
-  const prompt = `你是一名在职 AI 工程师/研究员，正在给一位备战秋招的学生分享行业洞察。以下是今日 ${articles.length} 篇科技/AI 文章。
+  const jobsForLLM = jobs.slice(0, 12).map(j => ({
+    id: j.job_id,
+    company: j.company_name,
+    title: j.job_name,
+    location: j.district_list?.[0]?.area_cn || '',
+    education: j.education_cn || '',
+    major: j.major_cn || [],
+    deadline: j.end_time || '',
+    advantage: j.advantage_notes?.length ? j.advantage_notes : [],
+  }));
+
+  const jobSection = jobsForLLM.length
+    ? `\n\n同时你收到 ${jobsForLLM.length} 个国企校招岗位（已按管科/信管专业预筛）：\n${JSON.stringify(jobsForLLM, null, 2)}
+
+对这些岗位的额外任务：
+- 判断每个岗位对用户的匹配度（管理科学与工程/信息管理与信息系统背景能做什么、如何切入）
+- 标注明确提及 985/双一流/硕士优待的岗位及其具体优待说明
+- 标注是否属于 AI 产品/应用类岗位，还是综合管理/通用岗
+- 给出投递建议和价值分析（为什么值得/不值得）
+
+在 career_advice 中融入岗位洞察。在输出中增加 jobs 数组。`
+    : '';
+
+  const prompt = `你是一名在职 AI 工程师/研究员，正在给一位备战秋招的学生分享行业洞察。学生背景：西安交通大学（985）研究生，管理科学与工程/信息管理与信息系统专业。以下是今日 ${articles.length} 篇科技/AI 文章。${jobSection}
 
 请用中文完成：
 
@@ -87,17 +111,30 @@ async function analyzeWithDeepSeek(articles) {
       "summary": "核心内容摘要",
       "key_points": ["要点1", "要点2"]
     }
-  ]
+  ]${jobsForLLM.length ? `,
+  "jobs": [
+    {
+      "job_id": "岗位ID",
+      "company": "公司名",
+      "title": "岗位名",
+      "location": "工作地点",
+      "type": "AI产品应用类 | 综合管理类 | 数据分析类",
+      "match_reason": "为什么适合该生（管科背景如何切入）",
+      "advantage_flag": true_or_false,
+      "advantage_note": "985/硕士优待说明（有则写，无则null）",
+      "advice": "投递建议"
+    }
+  ]` : ''}
 }`;
 
   const body = {
     model: DEEPSEEK_MODEL,
     messages: [
-      { role: 'system', content: '你是一名在职 AI 从业者，用过来人视角给学生输出可操作的求职洞察，输出严格 JSON。' },
-      { role: 'user', content: prompt + '\n\n文章列表：\n' + JSON.stringify(articlesForLLM, null, 2) },
+      { role: 'system', content: '你是一名在职 AI 从业者，兼顾帮助西交管科学生求职。用过来人视角输出可操作的求职洞察，输出严格 JSON。' },
+      { role: 'user', content: prompt + '\n\n文章列表：\n' + JSON.stringify(articlesForLLM, null, 2) + (jobsForLLM.length ? '\n\n岗位列表：\n' + JSON.stringify(jobsForLLM, null, 2) : '') },
     ],
     temperature: 0.3,
-    max_tokens: 8192,
+    max_tokens: 16384,
   };
 
   console.log(`  调用 DeepSeek API（${articles.length} 篇）...`);
@@ -151,13 +188,14 @@ async function analyzeWithDeepSeek(articles) {
     highlights: parsed.highlights || [],
     careerAdvice: parsed.career_advice || null,
     articleMap,
+    jobs: parsed.jobs || [],
     usage: data?.usage,
   };
 }
 
 // ─── Email HTML generation ───────────────────────────────────────
 
-function buildHtml(topItems, aiResult) {
+function buildHtml(topItems, aiResult, jobsRaw = []) {
   const now = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false });
 
   let html = `<!DOCTYPE html>
@@ -209,6 +247,33 @@ function buildHtml(topItems, aiResult) {
     <div style="font-size:12px;font-weight:600;color:#0284c7;margin-bottom:4px">📌 给我的建议</div>
     ${ca.tips.map(t => `<div style="font-size:12px;color:#444;margin-bottom:3px;padding-left:12px">• ${escapeHtml(t)}</div>`).join('')}
   </div>` : ''}
+</div>`;
+  }
+
+  // ── 国企校招机会 section ──
+  if (aiResult?.jobs?.length) {
+    const effectiveJobs = aiResult.jobs.slice(0, 12);
+    html += `
+<!-- Jobs -->
+<div style="background:linear-gradient(135deg,#f0fdf4,#fff);border-radius:8px;padding:16px;margin-bottom:16px;border:1px solid #bbf7d0">
+  <h2 style="margin:0 0 12px;font-size:16px;color:#15803d">🏛️ 国企校招机会</h2>
+  ${effectiveJobs.map(j => `
+  <div style="margin-bottom:12px;padding:12px;background:#fff;border-radius:6px;border:1px solid #eee">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+      <span style="font-size:14px;font-weight:600;color:#333">${escapeHtml(j.company)}</span>
+      <span style="font-size:11px;background:#dcfce7;color:#15803d;padding:2px 8px;border-radius:4px">${escapeHtml(j.type || '')}</span>
+    </div>
+    <div style="font-size:13px;color:#555;margin-bottom:4px">${escapeHtml(j.title)}</div>
+    <div style="font-size:11px;color:#999;margin-bottom:6px">📍 ${escapeHtml(j.location)}</div>
+    <div style="font-size:12px;color:#555;margin-bottom:4px">💡 ${escapeHtml(j.match_reason || '')}</div>
+    ${j.advantage_flag ? `
+    <div style="font-size:12px;color:#b45309;font-weight:600;margin-bottom:4px;padding:4px 8px;background:#fef3c7;border-radius:4px;display:inline-block">⭐ ${escapeHtml(j.advantage_note)}</div>` : ''}
+    ${j.advice ? `
+    <div style="font-size:12px;color:#555;margin-top:4px">📌 ${escapeHtml(j.advice)}</div>` : ''}
+    <div style="margin-top:6px">
+      <a href="https://www.iguopin.com/job/detail?id=${encodeURIComponent(j.job_id)}" target="_blank" style="font-size:12px;color:#15803d;text-decoration:underline">查看详情 →</a>
+    </div>
+  </div>`).join('')}
 </div>`;
   }
 
@@ -324,12 +389,21 @@ async function main() {
   const topItems = unique.slice(0, 60);
   console.log(`\n去重后 ${unique.length} 篇，取前 ${topItems.length} 篇`);
 
+  // ── Fetch jobs ──
+  let topJobs = [];
+  try {
+    topJobs = await fetchJobs();
+    console.log(`  ✓ 国聘: ${topJobs.length} 个相关校招岗位`);
+  } catch (e) {
+    console.error(`  ✗ 国聘抓取失败: ${e.message}`);
+  }
+
   // ── AI analysis ──
   let aiResult = null;
   const aiBatch = topItems.slice(0, AI_BATCH_SIZE);
   if (aiBatch.length > 0) {
     try {
-      aiResult = await analyzeWithDeepSeek(aiBatch);
+      aiResult = await analyzeWithDeepSeek(aiBatch, topJobs);
     } catch (e) {
       console.error(`  ✗ AI 分析失败: ${e.message}`);
       // Continue without AI analysis
@@ -355,7 +429,7 @@ async function main() {
   await transporter.sendMail({
     from: process.env.QQ_EMAIL,
     to: process.env.QQ_EMAIL,
-    subject: `${subjectBase}（${topItems.length} 篇${aiResult ? ' · AI 分析' : ''}）`,
+    subject: `${subjectBase}（${topItems.length} 篇${topJobs.length ? ` · ${topJobs.length} 个岗位` : ''}${aiResult ? ' · AI 分析' : ''}）`,
     html,
   });
 
