@@ -1,0 +1,28 @@
+name: Analyze Skills
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly: UTC 2 Sunday = Beijing 10 Sunday
+    - cron: '0 2 * * 0'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: node scripts/analyze-skills.mjs
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      - name: Commit data
+        run: |
+          git config user.name "hn-ai-bot"
+          git config user.email "bot@hn-ai-tracker"
+          git add skills/data.json
+          git diff --cached --exit-code || (git commit -m "chore: update skills analysis data" && git push)

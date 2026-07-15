@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 技能分析报告 · 国企校招能力树</title>
+<style>
+:root {
+  --bg: #f0f4f8;
+  --surface: #fff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text2: #64748b;
+  --primary: #1e40af;
+  --primary-light: #dbeafe;
+  --accent: #059669;
+  --accent-light: #d1fae5;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --rose: #e11d48;
+  --rose-light: #ffe4e6;
+  --radius: 12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.6;
+  padding:20px;
+}
+.container{max-width:960px;margin:0 auto}
+
+/* Hero */
+.hero{
+  background:linear-gradient(135deg,#1e3a5f 0%,#1e40af 50%,#059669 100%);
+  color:#fff;border-radius:var(--radius);padding:40px 32px;margin-bottom:24px;
+}
+.hero h1{font-size:28px;font-weight:700;margin-bottom:8px}
+.hero .meta{font-size:13px;opacity:.8}
+.hero .meta span{margin-right:16px}
+
+/* Cards */
+.card{background:var(--surface);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.card-title{font-size:18px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-sub{font-size:14px;color:var(--text2);margin-bottom:16px}
+
+/* Summary */
+.summary-text{font-size:15px;color:var(--text);line-height:1.8}
+
+/* Skill tree */
+.skill-category{margin-bottom:16px}
+.skill-category:last-child{margin-bottom:0}
+.skill-category h3{
+  font-size:15px;font-weight:600;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px;
+}
+.skill-category h3 .c-level{
+  font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;
+}
+.c-level.core{background:var(--primary-light);color:var(--primary)}
+.c-level.soft{background:var(--accent-light);color:var(--accent)}
+.c-desc{font-size:13px;color:var(--text2);margin-bottom:8px}
+.skill-tag{
+  display:inline-block;padding:4px 10px;margin:0 4px 6px 0;
+  font-size:12px;border-radius:6px;border:1px solid var(--border);
+}
+.skill-tag.required{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+.skill-tag.important{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+.skill-tag.recommended{background:var(--accent-light);color:#065f46;border-color:#a7f3d0}
+
+/* AI Coverage */
+.coverage-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:640px){.coverage-grid{grid-template-columns:1fr 1fr}}
+.coverage-item{padding:16px;border:1px solid var(--border);border-radius:8px}
+.coverage-item h4{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--primary)}
+.coverage-item .cov-detail{font-size:13px;color:var(--text2);margin-bottom:4px}
+.coverage-item .cov-label{font-size:11px;font-weight:600;color:var(--text2)}
+
+/* Learning Path */
+.path-item{
+  display:flex;gap:16px;padding:16px;border:1px solid var(--border);
+  border-radius:8px;margin-bottom:12px;align-items:flex-start;
+}
+.path-item:last-child{margin-bottom:0}
+.path-priority{
+  flex-shrink:0;width:44px;height:28px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;
+}
+.path-priority.p0{background:var(--rose)}
+.path-priority.p1{background:var(--amber)}
+.path-priority.p2{background:var(--accent)}
+.path-body{flex:1;min-width:0}
+.path-body h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.path-body .p-reason{font-size:13px;color:var(--text2);margin-bottom:4px}
+.path-body .p-approach{font-size:13px;color:var(--text);margin-bottom:6px}
+.path-projects{display:flex;flex-wrap:wrap;gap:6px}
+.project-tag{
+  font-size:12px;padding:3px 8px;border-radius:4px;
+  background:var(--primary-light);color:var(--primary);
+}
+
+/* Job list */
+.job-table{width:100%;border-collapse:collapse;font-size:13px}
+.job-table th{text-align:left;padding:8px;background:var(--bg);font-weight:600}
+.job-table td{padding:8px;border-top:1px solid var(--border)}
+
+/* Loading / Error */
+.state{text-align:center;padding:60px 20px;color:var(--text2)}
+.state .icon{font-size:48px;margin-bottom:12px}
+.state h2{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px}
+</style>
+</head>
+<body>
+<div class="container" id="app">
+  <div class="state" id="loading">
+    <div class="icon">⏳</div>
+    <h2>加载分析数据...</h2>
+    <p>正在获取最新的能力树分析</p>
+  </div>
+</div>
+
+<script>
+const API = window.location.origin + '/skills/data.json';
+
+async function main() {
+  let data;
+  try {
+    const r = await fetch(API + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    data = await r.json();
+  } catch (e) {
+    document.getElementById('app').innerHTML = `
+      <div class="state">
+        <div class="icon">⚠️</div>
+        <h2>数据加载失败</h2>
+        <p>${e.message}</p>
+        <p style="margin-top:12px;font-size:13px">尚未生成分析数据。管理员请运行 GitHub Actions → <strong>Analyze Skills</strong></p>
+      </div>`;
+    return;
+  }
+
+  const updated = data.last_updated
+    ? new Date(data.last_updated).toLocaleDateString('zh-CN', { timeZone: 'Asia/Shanghai', hour:'2-digit',minute:'2-digit' })
+    : '未知';
+
+  let html = '';
+
+  // Hero
+  html += `
+<div class="hero">
+  <h1>🔧 AI 技能分析报告</h1>
+  <div class="meta">
+    <span>📦 ${data.total_jobs || 0} 个校招岗位</span>
+    <span>🕐 更新于 ${updated}</span>
+  </div>
+</div>`;
+
+  // Summary
+  if (data.overall_summary) {
+    html += `
+<div class="card">
+  <div class="card-title">💡 总体洞察</div>
+  <div class="summary-text">${escapeHtml(data.overall_summary)}</div>
+</div>`;
+  }
+
+  // Skill tree
+  if (data.skill_tree?.length) {
+    html += `
+<div class="card">
+  <div class="card-title">🌳 能力树</div>
+  <div class="card-sub">岗位共同要求的能力分析，按类别展开</div>`;
+    for (const cat of data.skill_tree) {
+      const levelClass = (cat.level || '').includes('核心') ? 'core' : 'soft';
+      html += `
+  <div class="skill-category">
+    <h3>${escapeHtml(cat.category)} <span class="c-level ${levelClass}">${escapeHtml(cat.level || '')}</span></h3>
+    ${cat.description ? `<div class="c-desc">${escapeHtml(cat.description)}</div>` : ''}
+    ${(cat.items || []).map(s => {
+      const impClass = s.importance === '必备' ? 'required' : s.importance === '重要' ? 'important' : 'recommended';
+      return `<span class="skill-tag ${impClass}" title="${escapeHtml(s.reason || '')}">${escapeHtml(s.skill)}<span style="font-size:10px;margin-left:4px;opacity:.7">${escapeHtml(s.importance)}</span></span>`;
+    }).join('')}
+  </div>`;
+    }
+    html += `</div>`;
+  }
+
+  // AI Coverage
+  if (data.ai_coverage?.length) {
+    html += `
+<div class="card">
+  <div class="card-title">🤖 AI 赋能分析</div>
+  <div class="card-sub">最新 AI 技术如何覆盖每项能力需求</div>
+  <div class="coverage-grid">`;
+    for (const cov of data.ai_coverage) {
+      html += `
+    <div class="coverage-item">
+      <h4>${escapeHtml(cov.skill_needed || '')}</h4>
+      <div class="cov-detail"><span class="cov-label">AI 覆盖：</span>${escapeHtml(cov.how_ai_covers || '')}</div>
+      <div class="cov-detail"><span class="cov-label">学习：</span>${escapeHtml(cov.learn || '')}</div>
+      <div class="cov-detail"><span class="cov-label">推荐项目：</span>${escapeHtml(cov.project || '')}</div>
+    </div>`;
+    }
+    html += `
+  </div>
+</div>`;
+  }
+
+  // Learning path
+  if (data.learning_path?.length) {
+    html += `
+<div class="card">
+  <div class="card-title">🎯 学习路线</div>
+  <div class="card-sub">按优先级排序的补强计划</div>`;
+    for (const p of data.learning_path) {
+      const pClass = (p.priority || '').toLowerCase() === 'p0' ? 'p0'
+        : (p.priority || '').toLowerCase() === 'p1' ? 'p1' : 'p2';
+      html += `
+  <div class="path-item">
+    <div class="path-priority ${pClass}">${escapeHtml(p.priority)}</div>
+    <div class="path-body">
+      <h4>${escapeHtml(p.topic)}</h4>
+      <div class="p-reason">${escapeHtml(p.reason || '')}</div>
+      <div class="p-approach">${escapeHtml(p.approach || '')}</div>
+      ${(p.projects || []).length ? `<div class="path-projects">${p.projects.map(pr => `<span class="project-tag">${escapeHtml(pr)}</span>`).join('')}</div>` : ''}
+    </div>
+  </div>`;
+    }
+    html += `</div>`;
+  }
+
+  // Source jobs
+  if (data.analyzed_jobs?.length) {
+    html += `
+<div class="card">
+  <div class="card-title">📋 分析岗位来源</div>
+  <div class="card-sub">本次分析基于以下 ${data.analyzed_jobs.length} 个校招岗位</div>
+  <div style="overflow-x:auto">
+  <table class="job-table">
+    <thead><tr><th>公司</th><th>岗位</th><th>地点</th><th>学历</th></tr></thead>
+    <tbody>`;
+    for (const j of data.analyzed_jobs) {
+      html += `<tr><td>${escapeHtml(j.company || '')}</td><td>${escapeHtml(j.title || '')}</td><td>${escapeHtml(j.location || '')}</td><td>${escapeHtml(j.education || '')}</td></tr>`;
+    }
+    html += `
+    </tbody>
+  </table>
+  </div>
+</div>`;
+  }
+
+  document.getElementById('app').innerHTML = html;
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+main();
+</script>
+</body>
+</html>
