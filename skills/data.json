@@ -1,202 +1,174 @@
 {
-  "overall_summary": "国企数智化转型岗位对复合型人才需求激增，核心要求包括数据分析、AI应用、产品思维和业务理解。管理科学与工程背景的硕士生凭借数据分析和流程优化能力具有天然优势。AI技术正在从工具层面全面赋能数据清洗、建模、产品设计和决策支持，掌握AI Agent、大模型应用和自动化分析能力将成为核心竞争力。学习路径应聚焦AI与业务深度融合的实战项目。",
+  "overall_summary": "国企数智化转型岗位对人才的需求集中在数据分析、AI应用与产品设计三个核心领域，强调技术能力与业务理解的融合，尤其重视AI工具（大模型、Agent）在业务流程中的实际落地能力。管理科学与工程背景的学生具备系统思维和数据敏感度，与这些岗位高度匹配，但需强化AI开发框架和产品实战经验。",
   "skill_tree": [
     {
-      "category": "数据分析与处理",
-      "description": "几乎所有岗位要求具备数据分析能力，包括数据挖掘、指标建模、可视化等。",
+      "category": "数据分析与 AI 基础",
+      "description": "岗位对数据获取、处理、建模和可视化的基本要求，是数智化岗位的基石。",
       "items": [
         {
           "skill": "SQL",
           "importance": "必备",
-          "reason": "出现在80%以上数据分析/产品/运维岗，用于数据提取与处理"
+          "reason": "出现于60%以上数据分析/产品岗，如国研大数据分析师、长城证券产品经理等均明确要求。"
         },
         {
           "skill": "Python",
           "importance": "必备",
-          "reason": "用于数据清洗、建模、AI开发，出现在70%以上岗位"
+          "reason": "出现于50%以上岗位，用于数据处理、建模、AI开发，如中远海运科技产品经理、联通研究院网络数据分析岗。"
+        },
+        {
+          "skill": "机器学习/深度学习",
+          "importance": "重要",
+          "reason": "出现于30%以上岗位，尤其AI产品、大数据分析岗，如招商局金融科技AI产品经理、国研大数据分析师。"
         },
         {
           "skill": "数据可视化",
           "importance": "重要",
-          "reason": "如Tableau/Power BI/Matplotlib，出现在50%岗位，用于报告呈现"
-        },
-        {
-          "skill": "统计分析",
-          "importance": "重要",
-          "reason": "如回归、假设检验，出现在大数据分析、金融岗位"
+          "reason": "出现于20%以上岗位，用于报告呈现和决策支持，如国研大数据分析师、长城证券产品经理。"
         }
       ]
     },
     {
-      "category": "AI与机器学习",
-      "description": "岗位对AI技术需求显著上升，尤其大模型、智能体、传统机器学习。",
+      "category": "AI 产品与技术",
+      "description": "岗位对最新AI技术（大模型、Agent、RAG）的应用和落地能力要求日益突出。",
       "items": [
         {
-          "skill": "大模型应用",
+          "skill": "大模型/LLM 应用",
           "importance": "必备",
-          "reason": "出现在AI产品、售前、研发岗，如RAG、Agent、Prompt"
+          "reason": "出现于40%以上岗位，如中远海运科技产品经理要求了解LLM能力边界，联通研究院网络智能化岗直接研究大模型。"
         },
         {
-          "skill": "机器学习",
+          "skill": "RAG/Agent 开发",
           "importance": "重要",
-          "reason": "如分类、聚类、回归，出现在数据分析、网络优化岗"
+          "reason": "出现于20%以上岗位，如招商局金融科技AI产品经理要求熟悉RAG和智能体，沪东重机IT产品设计优先智能体经验。"
         },
         {
-          "skill": "深度学习",
+          "skill": "AI 办公工具",
           "importance": "推荐",
-          "reason": "如TensorFlow/PyTorch，在部分研究岗要求"
+          "reason": "北控城市资源管培生明确要求擅长使用AI办公，其他管理岗也有提及。"
+        },
+        {
+          "skill": "AI 开发框架 (LangChain等)",
+          "importance": "重要",
+          "reason": "15%以上岗位优先考虑，如中远海运科技产品经理要求Cursor等AI编程工具，需掌握框架实现快速开发。"
         }
       ]
     },
     {
-      "category": "产品与项目管理",
-      "description": "产品经理、解决方案等岗位要求需求分析、原型设计、文档编写。",
+      "category": "产品设计与项目管理",
+      "description": "岗位对产品思维、用户需求分析、方案设计及落地推进的通用能力要求。",
       "items": [
         {
-          "skill": "需求分析",
+          "skill": "需求分析与产品规划",
           "importance": "必备",
-          "reason": "产品岗核心技能，出现频率极高"
+          "reason": "所有产品经理岗和部分解决方案岗的核心要求，如联通产品经理、太极售前咨询。"
         },
         {
-          "skill": "原型设计",
-          "importance": "重要",
-          "reason": "如Axure/Figma/MasterGo，产品岗常用"
+          "skill": "原型设计工具 (Axure/Figma等)",
+          "importance": "必备",
+          "reason": "中远海运科技产品经理明确要求Figma，联通产品经理要求Axure，出现于半数产品岗。"
         },
         {
           "skill": "项目管理",
           "importance": "重要",
-          "reason": "如敏捷开发、流程管理，出现在数字化转型岗"
-        }
-      ]
-    },
-    {
-      "category": "编程与开发",
-      "description": "基础编程能力是硬性要求，部分岗位需要全栈或算法开发。",
-      "items": [
-        {
-          "skill": "C++/Java",
-          "importance": "重要",
-          "reason": "出现在数字化开发、网络研发岗"
+          "reason": "中讯邮电产品经理、长城证券产品经理等要求项目管理和推动能力。"
         },
         {
-          "skill": "Web开发框架",
-          "importance": "推荐",
-          "reason": "如Spring Boot/Django，少数岗位提及"
-        }
-      ]
-    },
-    {
-      "category": "业务与行业知识",
-      "description": "国企岗位重视行业理解，如金融、通信、交通、医疗等。",
-      "items": [
-        {
-          "skill": "行业分析",
+          "skill": "文档与方案撰写",
           "importance": "重要",
-          "reason": "解决方案、产品经理岗要求行业洞察"
-        },
-        {
-          "skill": "办公软件高级应用",
-          "importance": "重要",
-          "reason": "如PPT/Word/Excel，多岗位提及"
+          "reason": "售前、产品岗均需撰写PRD、解决方案、汇报材料，如太极售前、国研大数据分析。"
         }
       ]
     }
   ],
   "ai_coverage": [
     {
-      "skill_needed": "数据分析与处理",
-      "how_ai_covers": "利用AI Agent或Code Interpreter自动完成数据清洗、异常检测、特征工程，大模型可生成分析报告。",
-      "learn": "学习LangChain+AutoGen搭建自动化分析管线，掌握PandasAI、Copilot等AI辅助工具。",
-      "project": "构建一个简历与岗位匹配分析Agent，自动提取关键信息并生成匹配报告。"
+      "skill_needed": "数据分析",
+      "how_ai_covers": "AI Agent可自动化数据清洗、分析和报告生成，降低手工操作成本。",
+      "learn": "学习 LangChain + AutoGen 搭建自动化分析流程，利用 Code Interpreter 执行代码。",
+      "project": "构建一个基于AI的简历-岗位匹配分析 Agent，自动采集数据、清洗、生成可视化报告。"
     },
     {
-      "skill_needed": "机器学习建模",
-      "how_ai_covers": "AutoML工具（如H2O、AutoGluon）自动调参选模型，大模型辅助特征选择和模型解释。",
-      "learn": "学习AutoML框架和MLflow管理实验，善用大模型生成建模代码。",
-      "project": "开发一个网络流量预测模型（时间序列），包含数据预处理、模型训练和部署。"
+      "skill_needed": "大模型/LLM 应用",
+      "how_ai_covers": "通过 API 调用大模型实现智能问答、文本生成、知识检索等。",
+      "learn": "掌握 OpenAI API、Prompt Engineering、RAG 模式。",
+      "project": "开发一个企业知识库问答系统，支持文档上传和智能检索。"
     },
     {
-      "skill_needed": "产品需求分析与设计",
-      "how_ai_covers": "大模型辅助进行用户访谈摘要、竞品分析、需求文档撰写，生成原型草稿。",
-      "learn": "使用ChatGPT/Claude进行需求分析，结合Figma AI插件快速原型。",
-      "project": "设计一个AI驱动的智能客服产品，完成从需求调研到PRD的全流程。"
+      "skill_needed": "产品设计",
+      "how_ai_covers": "AIGC 工具可快速生成原型、写 PRD、分析用户反馈，提升效率。",
+      "learn": "使用 Claude/GPT 辅助产品文档生成，结合 Figma AI 插件。",
+      "project": "设计一个 AI 赋能的内部知识库产品，从需求分析到原型全程利用 AI 辅助。"
     },
     {
-      "skill_needed": "编程与开发",
-      "how_ai_covers": "AI编程助手（Cursor、Copilot）提升编码效率，自动生成代码和测试用例。",
-      "learn": "掌握Cursor/Claude Code的深度使用，学习AI辅助调试和代码审查。",
-      "project": "使用AI辅助开发一个简易的数据仪表盘Web应用，集成大模型问答功能。"
-    },
-    {
-      "skill_needed": "沟通与方案呈现",
-      "how_ai_covers": "AI辅助生成PPT演示文稿、技术方案文档，自动翻译和润色。",
-      "learn": "利用Gamma、Beautiful.ai等AI工具快速制作专业汇报材料。",
-      "project": "准备一个完整的方案汇报PPT，主题为“某国企数智化转型方案”。"
+      "skill_needed": "编程与系统开发",
+      "how_ai_covers": "AI 辅助编程工具可大幅提高编码效率，自动生成代码片段、调试、优化。",
+      "learn": "深度使用 Cursor、Claude Code、GitHub Copilot 进行日常开发。",
+      "project": "基于 LangChain 开发一个自动化报告生成系统，利用 AI 编写数据处理脚本。"
     }
   ],
   "learning_path": [
     {
       "priority": "P0",
-      "topic": "AI Agent与智能体开发",
-      "reason": "岗位明确要求AI产品、Agent经验，国企数智化转型核心需求。",
-      "approach": "从LangChain入门，理解Agent/Tool/Chain概念，学习AutoGen多智能体协作，完成实战项目。",
+      "topic": "AI Agent 开发框架",
+      "reason": "国企数智化转型核心需求，大部分岗位要求落地 AI 应用，Agent 是关键范式。",
+      "approach": "从 LangChain 入门，理解 Agent、Tool、Chain 概念，完成 2-3 个实战项目。",
       "projects": [
-        "智能文档问答系统（RAG+Agent）",
-        "自动化数据分析Pipeline（Agent调用SQL+Python工具）"
+        "智能文档问答系统 (RAG)",
+        "自动化数据分析 Pipeline (Code Interpreter)"
       ]
     },
     {
       "priority": "P0",
-      "topic": "Python数据分析与可视化",
-      "reason": "几乎所有岗位必备，数据清洗、建模、可视化基础。",
-      "approach": "系统学习Pandas、NumPy、Matplotlib、Seaborn，结合SQL实践，完成端到端数据分析项目。",
+      "topic": "大模型应用开发",
+      "reason": "岗位普遍要求了解大模型能力并用于产品设计，是必备技能。",
+      "approach": "学习 Prompt Engineering、Function Calling、RAG，结合业务场景调用模型。",
       "projects": [
-        "电商用户行为分析（SQL+Python）",
-        "金融风控数据建模（逻辑回归、决策树）"
+        "企业知识库问答 Bot",
+        "基于 LLM 的智能客服 Demo"
+      ]
+    },
+    {
+      "priority": "P0",
+      "topic": "数据分析自动化",
+      "reason": "数据分析是大部分岗位的硬技能，AI 可大幅提升效率。",
+      "approach": "用 Python 配合 AI Agent 实现数据清洗、探索性分析、可视化全流程自动化。",
+      "projects": [
+        "简历岗位匹配分析 Agent",
+        "金融数据报告自动生成系统"
       ]
     },
     {
       "priority": "P1",
-      "topic": "大模型应用与Prompt Engineering",
-      "reason": "AI产品、解决方案岗位频繁提及大模型，理解能力边界和适用场景。",
-      "approach": "学习Prompt设计技巧，掌握RAG架构（向量数据库+LLM），了解主流模型（GPT、Claude、文心等）。",
+      "topic": "产品设计与项目管理",
+      "reason": "产品岗和售前岗需要快速输出高质量原型和方案，AI 可辅助但需掌握基本工具。",
+      "approach": "学习 Axure/Figma 使用，用 AI 工具辅助生成 PRD 和竞品分析。",
       "projects": [
-        "企业知识库智能问答系统（RAG）",
-        "大模型辅助的竞品分析报告自动生成"
+        "从 0 到 1 设计一个 AI 产品（如智能排班系统）",
+        "撰写一份完整的商业需求文档"
       ]
     },
     {
       "priority": "P1",
-      "topic": "产品设计与原型工具",
-      "reason": "产品经理岗硬性要求，熟练使用Figma/MasterGo、Axure等。",
-      "approach": "学习用户研究、信息架构、交互设计，掌握Figma组件化和原型制作。",
+      "topic": "AI 编程与工具链",
+      "reason": "提升开发效率，在面试和工作中展示 AI 原生能力。",
+      "approach": "系统使用 Cursor/Claude Code 进行日常编程，掌握 AI 辅助调试和测试。",
       "projects": [
-        "设计一个数据产品原型（如销售分析看板）",
-        "完成一个AI产品的PRD和交互原型"
+        "用 AI 辅助重构一个 Python 数据分析模块",
+        "利用 Copilot 开发一个 Web 小工具"
       ]
     },
     {
       "priority": "P2",
-      "topic": "机器学习与AutoML",
-      "reason": "部分数据分析、网络优化岗位需要传统机器学习技能。",
-      "approach": "学习经典算法（回归、分类、聚类），掌握sklearn，了解AutoML工具。",
+      "topic": "行业知识学习（通信/金融/交通）",
+      "reason": "国企岗位多涉及特定行业，了解业务背景有助于方案落地。",
+      "approach": "通过行研报告、在线课程、实习项目快速积累。",
       "projects": [
-        "客户流失预测模型",
-        "网络故障分类模型（自动调参）"
-      ]
-    },
-    {
-      "priority": "P2",
-      "topic": "AI编程工具与效率提升",
-      "reason": "提升开发效率，适应AI原生开发模式。",
-      "approach": "深入使用Cursor/Claude Code，学习AI辅助测试、代码重构。",
-      "projects": [
-        "用Cursor重构一个老旧数据分析脚本",
-        "AI辅助开发一个API服务"
+        "撰写一份通信行业 AI 应用趋势报告",
+        "参与一个金融风控相关的 AI 课题"
       ]
     }
   ],
-  "last_updated": "2026-07-15T05:21:47.940Z",
+  "last_updated": "2026-07-15T06:09:27.896Z",
   "total_jobs": 50,
   "analyzed_jobs": [
     {
