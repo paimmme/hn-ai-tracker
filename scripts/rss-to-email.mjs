@@ -2,11 +2,16 @@ import RssParser from 'rss-parser';
 import nodemailer from 'nodemailer';
 
 const FEEDS = [
+  // English — research & engineering
   { name: 'arXiv AI/ML/CV', url: 'https://rss.arxiv.org/rss/cs.AI+cs.CL+cs.LG' },
   { name: 'MIT Tech Review', url: 'https://www.technologyreview.com/topic/artificial-intelligence/feed/' },
   { name: 'GitHub Blog', url: 'https://github.blog/feed/' },
   { name: 'AWS ML Blog', url: 'https://aws.amazon.com/blogs/machine-learning/feed/' },
   { name: 'BAIR Blog', url: 'https://bair.berkeley.edu/blog/feed.xml' },
+  // Chinese — industry & product
+  { name: '机器之心', url: 'https://www.jiqizhixin.com/rss' },
+  { name: '量子位', url: 'https://rsshub.app/qbitai' },
+  { name: 'InfoQ 中文', url: 'https://rsshub.app/infoq/topic/1' },
 ];
 
 const parser = new RssParser({
