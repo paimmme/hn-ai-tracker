@@ -121,19 +121,19 @@ function scoreJob(job) {
 
 export async function fetchJobs() {
   console.log('  [jobs] 抓取国聘校招岗位...');
-  const [allJobs, aiJobs] = await Promise.all([
+  const [allJobs, aiJobs, aiCnJobs] = await Promise.all([
     fetchList(''),
     fetchList('AI'),
+    fetchList('人工智能'),
   ]);
-  console.log(`  [jobs] 全部校招: ${allJobs.length} 条 | AI 关键词: ${aiJobs.length} 条`);
+  console.log(`  [jobs] 全部: ${allJobs.length} 条 | AI: ${aiJobs.length} 条 | 人工智能: ${aiCnJobs.length} 条`);
 
   // 合并去重（按 job_id）
   const seen = new Set();
   const merged = [];
-  for (const job of [...allJobs, ...aiJobs]) {
+  for (const job of [...allJobs, ...aiJobs, ...aiCnJobs]) {
     if (seen.has(job.job_id)) continue;
     seen.add(job.job_id);
-    // 额外还搜一下"人工智能"
     merged.push(job);
   }
   console.log(`  [jobs] 去重后: ${merged.length} 条`);
