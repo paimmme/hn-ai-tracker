@@ -1,97 +1,112 @@
 {
-  "overall_summary": "这些国企校招岗位高度聚焦于数字化转型与AI赋能，对数据分析、产品设计、解决方案能力提出明确要求。技术栈上Python/SQL/大模型应用成为标配，产品思维、行业理解和跨团队协作能力并重。管理科学与工程背景适合切入数据产品、AI产品经理或解决方案工程师等复合型角色。",
+  "overall_summary": "这些国企校招岗位普遍要求数字化与AI基础能力，强调数据分析、产品设计与行业知识的融合。管理科学与工程背景的学生在流程优化、需求分析方面有优势，但需强化Python/SQL、AI工具应用及大模型实操能力。岗位对AI赋能业务场景（如智能客服、数据治理、自动化运维）的需求显著，具备跨学科复合技能者更具竞争力。",
   "skill_tree": [
     {
       "category": "数据分析与AI基础",
-      "description": "几乎所有技术类岗位要求具备数据处理、统计分析和机器学习基础，部分岗位直接要求熟悉大模型应用。",
+      "description": "岗位普遍要求具备数据处理、建模与AI工具使用能力，是数字化转型的核心技能栈。",
       "items": [
         {
           "skill": "SQL",
           "importance": "必备",
-          "reason": "出现于50%以上数据分析/产品岗，用于数据提取和报表"
+          "reason": "出现于70%以上的数据分析/产品/研发岗，用于数据提取与支撑决策"
         },
         {
           "skill": "Python",
           "importance": "必备",
-          "reason": "数据分析、建模、AI开发的核心语言，60%岗位明确要求"
+          "reason": "超过60%岗位明确要求，用于数据处理、建模及AI开发"
         },
         {
           "skill": "机器学习/深度学习",
           "importance": "重要",
-          "reason": "涉及算法研究与AI产品设计，45%岗位提及"
+          "reason": "约50%岗位提及，尤其在AI产品、网络智能化、金融风控方向"
         },
         {
-          "skill": "大模型应用",
+          "skill": "大模型/LLM",
           "importance": "重要",
-          "reason": "30%岗位要求熟悉LLM、Agent，趋势明显"
+          "reason": "约45%岗位要求了解大模型应用，如RAG、智能体"
         },
         {
           "skill": "数据可视化",
           "importance": "推荐",
-          "reason": "用于汇报和产品原型展示，部分数据分析岗要求"
+          "reason": "约30%岗位提及，用于数据汇报与产品演示"
         }
       ]
     },
     {
-      "category": "产品与方案能力",
-      "description": "产品经理、解决方案、管培生岗位重点关注需求分析、产品设计、方案撰写与项目管理。",
+      "category": "AI工具与开发框架",
+      "description": "岗位对AI工具链和开发框架有明确需求，尤其是AI编程和智能体搭建。",
       "items": [
         {
-          "skill": "需求分析",
-          "importance": "必备",
-          "reason": "产品岗和解决方案岗第一要求，出现于80%以上相关岗位"
+          "skill": "LangChain / AutoGen",
+          "importance": "推荐",
+          "reason": "约30%岗位提到智能体或RAG，是AI产品落地的关键技术"
         },
         {
-          "skill": "产品设计工具",
+          "skill": "AI编程工具 (Cursor/Claude Code)",
           "importance": "重要",
-          "reason": "Axure/墨刀/Figma等，40%产品岗要求"
+          "reason": "约35%岗位要求熟练使用AI编程工具，提升开发效率"
         },
         {
-          "skill": "文档与方案撰写",
-          "importance": "必备",
-          "reason": "方案类与售前岗必须，70%岗位要求"
+          "skill": "TensorFlow/PyTorch",
+          "importance": "推荐",
+          "reason": "约25%岗位涉及模型训练，尤其网络优化与金融量化方向"
         },
         {
-          "skill": "项目管理",
-          "importance": "重要",
-          "reason": "管培生及项目经理岗要求，涉及进度、风险管控"
+          "skill": "Git/Docker",
+          "importance": "推荐",
+          "reason": "约20%岗位提及版本控制与容器化，支持AI工程化"
         }
       ]
     },
     {
-      "category": "行业与业务理解",
-      "description": "国企岗位高度重视对行业场景的理解，尤其是通信、交通、金融、政务等领域。",
+      "category": "产品设计与管理",
+      "description": "众多产品经理/解决方案岗要求软技能与工具能力，尤其关注AI产品思维。",
       "items": [
         {
-          "skill": "行业知识",
-          "importance": "重要",
-          "reason": "如智慧交通、金融产品、运营商网络等，35%岗位明确提及"
+          "skill": "需求分析与PRD撰写",
+          "importance": "必备",
+          "reason": "超过50%产品/解决方案岗要求，从业务痛点转化技术方案"
         },
         {
-          "skill": "业务逻辑梳理",
+          "skill": "原型设计 (Figma/Axure/MasterGo)",
           "importance": "重要",
-          "reason": "能将业务痛点转化为技术方案，30%岗位要求"
+          "reason": "约40%产品岗要求独立完成高保真原型"
+        },
+        {
+          "skill": "用户体验设计(UI/UX)",
+          "importance": "推荐",
+          "reason": "约25%岗位要求简化复杂逻辑，提升交互体验"
+        },
+        {
+          "skill": "项目全生命周期管理",
+          "importance": "重要",
+          "reason": "约35%岗位要求跟进项目从立项到交付，掌握敏捷或PMBOK"
         }
       ]
     },
     {
-      "category": "软技能与综合素质",
-      "description": "沟通协调、学习能力、团队协作是管培生和技术岗的共同要求。",
+      "category": "行业知识与业务理解",
+      "description": "不同岗位垂直行业知识要求差异大，但普遍期待快速学习能力。",
       "items": [
         {
-          "skill": "沟通表达",
-          "importance": "必备",
-          "reason": "几乎所有岗位要求，尤其是售前、产品、管培生"
+          "skill": "通信网络知识 (5G/SDN/NFV)",
+          "importance": "重要",
+          "reason": "约30%岗位来自运营商及通信公司，是基础门槛"
         },
         {
-          "skill": "快速学习",
-          "importance": "必备",
-          "reason": "技术迭代快，70%岗位强调学习能力"
+          "skill": "航运物流/供应链",
+          "importance": "推荐",
+          "reason": "约15%岗位来自中远海运，需了解行业流程"
         },
         {
-          "skill": "团队协作",
-          "importance": "必备",
-          "reason": "跨部门合作常见，60%岗位提及"
+          "skill": "金融产品与风险知识",
+          "importance": "推荐",
+          "reason": "约15%岗位来自金融机构，需了解衍生品、风控模型"
+        },
+        {
+          "skill": "政务/城市治理",
+          "importance": "推荐",
+          "reason": "约10%岗位涉及智慧城市、应急，需政策意识"
         }
       ]
     }
@@ -99,105 +114,99 @@
   "ai_coverage": [
     {
       "skill_needed": "数据分析",
-      "how_ai_covers": "利用AI Agent自动进行数据清洗、特征工程和初步建模，如AutoML、LangChain+DataAgent",
-      "learn": "学习LangChain、AutoGen框架，结合pandas、scikit-learn实现自动化分析",
-      "project": "搭建一个自动数据分析机器人，输入数据文件自动生成报告"
+      "how_ai_covers": "使用AI Agent（如LangChain+AutoGen）自动完成数据清洗、特征工程、报告生成，减少手动编码时间。",
+      "learn": "学习LangChain核心概念（Chain, Agent, Tool），结合Pandas、Matplotlib实现自动化数据分析管线。",
+      "project": "构建一个简历与岗位匹配分析Agent，自动抽取关键词、计算匹配度并可视化结果。"
     },
     {
-      "skill_needed": "产品设计",
-      "how_ai_covers": "AI辅助用户调研（如情感分析）、竞品分析（自动抓取文本）、原型生成（UI生成工具）",
-      "learn": "使用ChatGPT、Claude进行需求分析与用户故事生成；用Figma AI插件加速设计",
-      "project": "设计一个基于大模型的智能客服产品，完成需求文档和原型"
+      "skill_needed": "大模型应用",
+      "how_ai_covers": "通过RAG技术将行业知识库与大模型结合，实现智能问答、文档分析、代码生成。",
+      "learn": "掌握向量数据库（如Chroma/FAISS）、Embedding模型、Prompt Engineering。",
+      "project": "开发一个航运物流智能问答系统，集成内部文档与运行手册，支持多轮对话。"
     },
     {
-      "skill_needed": "方案撰写",
-      "how_ai_covers": "利用大模型自动生成方案框架、优化表述、检查合规性，提升效率",
-      "learn": "学习Prompt Engineering，掌握用AI辅助撰写技术方案和汇报材料",
-      "project": "撰写一份国企数字化转型解决方案，全程使用AI工具辅助"
+      "skill_needed": "产品原型与交互",
+      "how_ai_covers": "利用AI设计工具（如MasterGo AI、Figma AI插件）从需求描述自动生成原型草稿，加速迭代。",
+      "learn": "熟练掌握MasterGo AI的「智能生成」功能，学习如何用自然语言描述界面逻辑。",
+      "project": "设计一个金融数据看板高保真原型，使用AI生成图表组件并调整交互细节。"
     },
     {
-      "skill_needed": "编程开发",
-      "how_ai_covers": "使用AI编程助手（GitHub Copilot、Cursor）提升代码质量和开发速度",
-      "learn": "熟练使用Copilot、Claude Code进行代码生成、调试和重构",
-      "project": "参与开源项目或自主开发一个小型AI应用"
-    },
-    {
-      "skill_needed": "行业研究",
-      "how_ai_covers": "AI自动搜索行业动态、总结政策文件、生成市场分析报告",
-      "learn": "搭建个人知识库（如RAG系统），定期追踪行业动态",
-      "project": "构建基于RAG的行业情报分析系统"
+      "skill_needed": "编程与开发效率",
+      "how_ai_covers": "使用AI编程助手（Cursor、GitHub Copilot）自动补全代码、生成测试用例，提升开发速度。",
+      "learn": "深度使用Cursor的Composer模式，将需求描述转化为可运行代码，学会调试AI生成的代码。",
+      "project": "用Cursor从0到1搭建一个简单的RAG应用，包括数据加载、向量化、检索和生成。"
     }
   ],
   "learning_path": [
     {
       "priority": "P0",
-      "topic": "AI Agent开发框架",
-      "reason": "国企数智化转型核心需求，产品经理和解决方案岗均需了解",
-      "approach": "从LangChain入门，理解Agent/Tool/Chain概念，完成实战项目",
+      "topic": "AI Agent 开发框架",
+      "reason": "国企数智化转型核心需求，半数以上岗位要求熟悉智能体、RAG或大模型应用。",
+      "approach": "从LangChain官方文档入门，理解Agent/Tool/Chain/Retriever概念，实践多步骤推理与工具调用。",
       "projects": [
-        "智能文档问答系统",
-        "自动化数据分析Pipeline"
+        "智能文档问答系统（结合本地PDF）",
+        "自动化数据分析Pipeline（自动清洗+可视化）"
       ]
     },
     {
       "priority": "P0",
-      "topic": "数据科学与编程强化",
-      "reason": "数据分析岗和AI岗的硬技能，面试高频考点",
-      "approach": "系统学习Python（pandas、numpy、scikit-learn）、SQL（窗口函数、复杂查询）",
+      "topic": "Python + SQL 数据技能",
+      "reason": "几乎所有技术岗位必备，数据分析基础。",
+      "approach": "系统学习Pandas、NumPy数据清洗，SQL窗口函数与复杂查询，结合真实数据集练习。",
       "projects": [
-        "Kaggle数据分析竞赛",
-        "企业销售数据分析项目"
+        "从Kaggle下载电信用户流失数据集，完成EDA并构建预测模型",
+        "设计一个销售数据仓库的SQL脚本并优化查询"
       ]
     },
     {
       "priority": "P1",
-      "topic": "产品与方案能力",
-      "reason": "产品经理和解决方案工程师必备，匹配学生管理背景",
-      "approach": "学习产品方法（用户研究、MVP、PRD），练习方案撰写与演讲",
+      "topic": "大模型应用与Prompt Engineering",
+      "reason": "岗位频繁出现LLM、RAG、AI产品设计，需要深入理解模型能力边界。",
+      "approach": "学习OpenAI API调用、向量数据库集成，掌握进阶Prompt技巧（COT、Few-shot）。",
       "projects": [
-        "设计一个AI+政务产品原型",
-        "撰写国企数字化转型方案"
+        "构建一个客服意图识别+多轮对话Agent",
+        "用RAG实现私有知识库问答系统"
       ]
     },
     {
       "priority": "P1",
-      "topic": "大模型应用与实践",
-      "reason": "40%岗位提及大模型，提升竞争力的关键",
-      "approach": "学习Prompt Engineering、RAG、微调基础，用API搭建应用",
+      "topic": "产品设计工具与AI融合",
+      "reason": "产品经理岗要求熟练使用原型工具，且需结合AI提升效率。",
+      "approach": "精通Figma或MasterGo，学习其AI插件；练习用AI生成原型和设计系统。",
       "projects": [
-        "基于GPT的知识库问答Bot",
-        "利用HuggingFace部署模型"
+        "设计一个中后台数据管理平台的完整原型",
+        "用MasterGo AI从需求文档生成低保真原型并迭代"
       ]
     },
     {
       "priority": "P2",
-      "topic": "行业知识积累",
-      "reason": "理解业务场景使方案更落地，差异化优势",
-      "approach": "关注国企热门行业（通信、金融、交通、能源），阅读政策报告",
+      "topic": "机器学习基础与工业应用",
+      "reason": "部分岗位需要模型开发或理解，尤其在网络优化、金融风控方向。",
+      "approach": "复习常见算法（分类、回归、聚类），用Scikit-learn做项目，并了解模型部署。",
       "projects": [
-        "参加行业峰会或实习",
-        "输出行业分析报告"
+        "金融风控评分卡模型（逻辑回归+特征工程）",
+        "网络流量异常检测（孤立森林+时序分析）"
       ]
     },
     {
       "priority": "P2",
-      "topic": "软技能提升",
-      "reason": "面试和工作中重要，尤其是沟通与团队协作",
-      "approach": "参与社团/项目负责人角色，练习presentation逻辑",
+      "topic": "行业知识快速学习",
+      "reason": "不同国企行业壁垒高，需针对性补充。",
+      "approach": "根据目标岗位行业，阅读行业白皮书、政策文件，参加行业讲座。",
       "projects": [
-        "组织一次技术分享",
-        "进行模拟面试训练"
+        "撰写一份通信行业数字化转型趋势分析报告",
+        "结合管理科学背景，设计一个供应链优化方案"
       ]
     }
   ],
-  "last_updated": "2026-07-19T05:20:27.192Z",
+  "last_updated": "2026-07-26T05:30:19.646Z",
   "total_jobs": 50,
   "analyzed_jobs": [
     {
-      "company": "国研大数据研究院有限公司",
-      "title": "大数据分析师（26年应届毕业生）",
-      "location": "北京-东城区",
-      "education": "博士"
+      "company": "三亚旅游文化发展集团有限公司",
+      "title": "管培生",
+      "location": "三亚-吉阳区",
+      "education": "本科"
     },
     {
       "company": "招商局金融科技有限公司",
@@ -208,12 +217,6 @@
     {
       "company": "中远海运科技股份有限公司",
       "title": "产品经理",
-      "location": "北京-朝阳区",
-      "education": "硕士"
-    },
-    {
-      "company": "北控城市环境服务集团有限公司",
-      "title": "管理培训生-集团总部（北控城市资源）",
       "location": "北京-朝阳区",
       "education": "硕士"
     },
@@ -248,12 +251,6 @@
       "education": "硕士"
     },
     {
-      "company": "太极计算机股份有限公司",
-      "title": "售前咨询工程师-2026届校招（北京）",
-      "location": "北京-朝阳区",
-      "education": "硕士"
-    },
-    {
       "company": "长城证券股份有限公司",
       "title": "【2027财富管理总部】产品经理(J10697)",
       "location": "深圳",
@@ -270,6 +267,12 @@
       "title": "网络数据分析与建模研究岗",
       "location": "北京-海淀区",
       "education": ""
+    },
+    {
+      "company": "中国长城科技集团股份有限公司",
+      "title": "计算产品系统架构师",
+      "location": "深圳",
+      "education": "博士"
     },
     {
       "company": "沪东重机有限公司",
@@ -290,22 +293,16 @@
       "education": "硕士"
     },
     {
-      "company": "广东一方制药有限公司",
-      "title": "财务管理培训生",
-      "location": "佛山",
-      "education": "本科"
+      "company": "河南汇融国际猎头有限公司",
+      "title": "技术培训生（派驻山东核电）",
+      "location": "烟台-海阳市",
+      "education": "大专"
     },
     {
-      "company": "浙江三狮南方新材料有限公司",
-      "title": "行政人事管培生",
-      "location": "杭州-余杭区",
-      "education": "本科"
-    },
-    {
-      "company": "中复神鹰碳纤维西宁有限公司",
-      "title": "管培生",
-      "location": "西宁-湟中区",
-      "education": "本科"
+      "company": "中远海运博鳌有限公司",
+      "title": "2026期新星（数智化方向）",
+      "location": "琼海",
+      "education": "硕士"
     },
     {
       "company": "横琴人才集团有限公司",
@@ -371,6 +368,18 @@
       "company": "长城信息股份有限公司",
       "title": "产品经理",
       "location": "长沙",
+      "education": "本科"
+    },
+    {
+      "company": "长城证券股份有限公司",
+      "title": "【2027金融科技研发中心】项目管理岗(J10707)",
+      "location": "深圳",
+      "education": "本科"
+    },
+    {
+      "company": "扬州中远海运重工有限公司",
+      "title": "2026校招人力资源管理岗",
+      "location": "扬州-江都区",
       "education": "本科"
     }
   ]
