@@ -38,13 +38,14 @@ ${JSON.stringify({
 1. 把岗位的共同要求汇总成能力树
 2. 分析最新 AI 技术如何覆盖/赋能这些能力
 3. 给出有针对性的学习路线建议（优先覆盖 must_have / should_have）
+4. learning_path.topic 尽量对齐 must_have 技能名；每项 projects 给 1-2 个可写进简历的具体练手项目
 
 输出 JSON：
 {
   "overall_summary": "3-5 句话总体洞察",
   "skill_tree": [{ "category": "分类名", "description": "概况", "items": [{ "skill": "技能名", "importance": "必备|重要|推荐", "reason": "为什么" }] }],
   "ai_coverage": [{ "skill_needed": "能力", "how_ai_covers": "AI覆盖方式", "learn": "学习建议", "project": "推荐项目" }],
-  "learning_path": [{ "priority": "P0|P1|P2", "topic": "主题", "reason": "原因", "approach": "方法", "projects": ["项目1","项目2"] }]
+  "learning_path": [{ "priority": "P0|P1|P2", "topic": "对齐共性技能名", "reason": "原因", "approach": "方法", "projects": ["具体项目1","具体项目2"] }]
 }`;
 
     const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
