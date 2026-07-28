@@ -7,13 +7,23 @@ import SkillRadar from './components/SkillRadar.vue'
 import JobExplorer from './components/JobExplorer.vue'
 import AiCoverage from './components/AiCoverage.vue'
 import LearningPath from './components/LearningPath.vue'
+import JdCluster from './components/JdCluster.vue'
 
 const { loading, error, data, refreshing, fetchData, refreshAnalysis } = useApi()
 const activeTab = ref('skill')
 
+const tabs = [
+  { id: 'skill', label: '🌳 能力树' },
+  { id: 'cluster', label: '📊 JD 聚类' },
+  { id: 'radar', label: '📈 能力雷达' },
+  { id: 'job', label: '📋 岗位探索' },
+  { id: 'ai', label: '🤖 AI 赋能' },
+  { id: 'learn', label: '🎯 学习路线' },
+]
+
 onMounted(() => fetchData())
 
-const hasData = computed(() => data.value && data.value.skill_tree?.length)
+const hasData = computed(() => data.value && (data.value.skill_tree?.length || data.value.cluster))
 </script>
 
 <template>
@@ -32,7 +42,6 @@ const hasData = computed(() => data.value && data.value.skill_tree?.length)
     </div>
 
     <div v-else-if="hasData" class="main">
-      <!-- Nav tabs -->
       <nav class="tabs">
         <button
           v-for="tab in tabs"
@@ -43,11 +52,12 @@ const hasData = computed(() => data.value && data.value.skill_tree?.length)
       </nav>
 
       <div class="content">
-        <SkillTree v-show="activeTab === 'skill'" :tree="data.skill_tree" />
-        <SkillRadar v-show="activeTab === 'radar'" :tree="data.skill_tree" />
-        <JobExplorer v-show="activeTab === 'job'" :jobs="data.analyzed_jobs" />
-        <AiCoverage v-show="activeTab === 'ai'" :coverage="data.ai_coverage" />
-        <LearningPath v-show="activeTab === 'learn'" :path="data.learning_path" />
+        <SkillTree v-show="activeTab === 'skill'" :tree="data.skill_tree || []" />
+        <JdCluster v-show="activeTab === 'cluster'" :cluster="data.cluster" />
+        <SkillRadar v-show="activeTab === 'radar'" :tree="data.skill_tree || []" />
+        <JobExplorer v-show="activeTab === 'job'" :jobs="data.analyzed_jobs || []" />
+        <AiCoverage v-show="activeTab === 'ai'" :coverage="data.ai_coverage || []" />
+        <LearningPath v-show="activeTab === 'learn'" :path="data.learning_path || []" />
       </div>
     </div>
 
@@ -61,24 +71,7 @@ const hasData = computed(() => data.value && data.value.skill_tree?.length)
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      tabs: [
-        { id: 'skill', label: '🌳 能力树' },
-        { id: 'radar', label: '📊 能力雷达' },
-        { id: 'job', label: '📋 岗位探索' },
-        { id: 'ai', label: '🤖 AI 赋能' },
-        { id: 'learn', label: '🎯 学习路线' },
-      ]
-    }
-  }
-}
-</script>
-
 <style>
-/* Reset & base */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "PingFang SC", sans-serif;
@@ -86,7 +79,6 @@ body {
 }
 .app { max-width: 1024px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
 
-/* Tabs */
 .tabs { display: flex; gap: 4px; margin-bottom: 20px; overflow-x: auto; }
 .tab {
   flex-shrink: 0; padding: 10px 18px; border: none; border-radius: 8px;
@@ -96,21 +88,15 @@ body {
 .tab:hover { background: #cbd5e1; }
 .tab.active { background: #1e40af; color: #fff; }
 
-/* Content area */
 .content { flex: 1; }
 
-/* Loading */
 .loading-state { text-align: center; padding: 80px 20px; color: #64748b; }
 .spinner { width: 32px; height: 32px; border: 3px solid #e2e8f0; border-top-color: #1e40af; border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Empty */
 .empty-state { text-align: center; padding: 80px 20px; color: #64748b; }
-
-/* Footer */
 .footer { text-align: center; padding: 24px 0 8px; font-size: 12px; color: #94a3b8; }
 
-/* Global utility classes used by components */
 .card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
 .card-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
 .card-sub { font-size: 13px; color: #64748b; margin-bottom: 16px; }

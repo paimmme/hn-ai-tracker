@@ -1,6 +1,6 @@
-// 岗位技能分析 — 调用 DeepSeek 生成能力树 + AI 覆盖 + 学习路线
+// 岗位技能分析 — DeepSeek 能力树 + JD 聚类专项学习
 import { writeFileSync } from 'fs';
-import { fetchJobs } from './fetch-jobs.mjs';
+import { fetchJobs, cleanJob, clusterJobsBySkills } from './fetch-jobs.mjs';
 
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';
 const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
@@ -11,22 +11,32 @@ function truncate(s, n) {
   return cleaned.length > n ? cleaned.slice(0, n) : cleaned;
 }
 
-async function analyzeWithDeepSeek(jobs) {
+async function analyzeWithDeepSeek(jobs, cluster) {
   const jobsForLLM = jobs.map(j => ({
-    company: j.company_name,
-    title: j.job_name,
-    content: truncate(j.contents, 600),
-    major: j.major_cn?.join(', ') || '',
-    education: j.education_cn || '',
-    location: j.district_list?.[0]?.area_cn || '',
+    company: j.company_name || j.company,
+    title: j.job_name || j.title,
+    content: truncate(j.contents || j.content || '', 600),
+    major: (j.major_cn || j.major || []).join?.(', ') || j.major || '',
+    education: j.education_cn || j.education || '',
+    location: j.district_list?.[0]?.area_cn || j.location || '',
+    skills: j.extracted_skills || [],
   }));
 
   const prompt = `你是资深 AI 职业规划师。分析以下国企校招岗位（学生背景：西安交通大学 985 硕，管理科学与工程/信息管理与信息系统），输出结构化的能力树分析。
 
+已完成 JD 技能聚类（请严格对齐专项学习路线）：
+${JSON.stringify({
+  must_have: cluster.must_have,
+  should_have: cluster.should_have,
+  nice_to_have: cluster.nice_to_have?.slice(0, 8),
+  role_clusters: cluster.role_clusters,
+  focus_plan: cluster.focus_plan,
+}, null, 2)}
+
 分析目标：
 1. 汇总这些岗位共同要求的技术栈和能力
 2. 指出最新 AI 技术如何赋能/覆盖每项能力需求
-3. 给出有针对性的学习路径建议
+3. 给出有针对性的学习路径建议（优先覆盖 must_have / should_have）
 
 输出严格 JSON（无 markdown 包裹），结构如下：
 {
@@ -88,7 +98,6 @@ async function analyzeWithDeepSeek(jobs) {
   const content = data.choices?.[0]?.message?.content;
   if (!content) throw new Error('Empty DeepSeek response');
 
-  // Try to parse JSON, handle if wrapped in ```json
   let parsed;
   const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
   if (jsonMatch) {
@@ -104,20 +113,52 @@ async function main() {
   console.log('[skills] 抓取岗位...');
   const jobs = await fetchJobs();
   const topJobs = jobs.slice(0, 30);
-  console.log(`[skills] 分析 ${topJobs.length} 个岗位...`);
+  const cleaned = topJobs.map(cleanJob);
+  const cluster = clusterJobsBySkills(cleaned);
+  console.log(`[skills] 分析 ${topJobs.length} 个岗位 + JD 聚类 (must=${cluster.must_have.length})...`);
 
-  const analysis = await analyzeWithDeepSeek(topJobs);
-  console.log('[skills] DeepSeek 分析完成');
+  let analysis = {};
+  if (DEEPSEEK_API_KEY) {
+    analysis = await analyzeWithDeepSeek(topJobs, cluster);
+    console.log('[skills] DeepSeek 分析完成');
+  } else {
+    console.warn('[skills] DEEPSEEK_API_KEY 未设置，仅写入聚类结果');
+    analysis = {
+      overall_summary: '基于规则聚类生成（未调用 LLM）。请配置 DEEPSEEK_API_KEY 获取完整能力树分析。',
+      skill_tree: [{
+        category: 'JD 共性技能（规则聚类）',
+        description: '按关键词覆盖率统计',
+        items: cluster.common_skills.slice(0, 12).map(s => ({
+          skill: s.skill,
+          importance: s.coverage >= 35 ? '必备' : s.coverage >= 20 ? '重要' : '推荐',
+          reason: `覆盖率 ${s.coverage}%（${s.count}/${cluster.total_jobs}）`,
+        })),
+      }],
+      ai_coverage: [],
+      learning_path: cluster.focus_plan.map(p => ({
+        priority: p.priority,
+        topic: p.skill,
+        reason: p.reason,
+        approach: p.action,
+        projects: [],
+      })),
+    };
+  }
 
   const output = {
     ...analysis,
+    cluster,
     last_updated: new Date().toISOString(),
     total_jobs: jobs.length,
-    analyzed_jobs: topJobs.map(j => ({
-      company: j.company_name,
-      title: j.job_name,
-      location: j.district_list?.[0]?.area_cn || '',
-      education: j.education_cn || '',
+    analyzed_jobs: cleaned.map(j => ({
+      job_id: j.job_id,
+      company: j.company,
+      title: j.title,
+      location: j.location,
+      education: j.education,
+      score: j.score,
+      extracted_skills: j.extracted_skills,
+      advantage_notes: j.advantage_notes,
     })),
   };
 

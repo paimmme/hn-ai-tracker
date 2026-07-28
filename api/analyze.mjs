@@ -1,35 +1,43 @@
-import { fetchAndScoreJobs, cleanJob } from './_lib.mjs';
+import { fetchAndScoreJobs, cleanJob, clusterJobsBySkills } from './_lib.mjs';
+import { allowCors, requireApiKey } from '../lib/auth.mjs';
 
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';
 const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || 'deepseek-v4-flash';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  allowCors(res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (!requireApiKey(req, res)) return;
   if (!DEEPSEEK_API_KEY) return res.status(400).json({ error: 'DEEPSEEK_API_KEY not configured' });
 
   try {
     const { jobCount = 30 } = req.body || {};
 
-    // Step 1: Fetch jobs
     const jobs = (await fetchAndScoreJobs()).slice(0, Math.min(jobCount, 50));
     const cleaned = jobs.map(cleanJob);
+    const cluster = clusterJobsBySkills(cleaned);
 
-    // Step 2: DeepSeek analysis
     const jobsForLLM = cleaned.map(j => ({
       company: j.company, title: j.title, location: j.location,
       education: j.education, major: j.major?.join(', ') || '',
       content: j.content.slice(0, 500),
+      skills: j.extracted_skills || [],
     }));
 
     const prompt = `你是一名资深 AI 职业规划师。以下是 ${jobsForLLM.length} 个国企校招岗位（目标学生背景：西交 985 硕，管科/信管专业）。
 
+已完成 JD 技能聚类结果（请在学习路线中对齐）：
+${JSON.stringify({
+  must_have: cluster.must_have,
+  should_have: cluster.should_have,
+  role_clusters: cluster.role_clusters.map(r => ({ role: r.role, count: r.count, top_skills: r.top_skills })),
+}, null, 2)}
+
 分析需求：
 1. 把岗位的共同要求汇总成能力树
 2. 分析最新 AI 技术如何覆盖/赋能这些能力
-3. 给出有针对性的学习路线建议
+3. 给出有针对性的学习路线建议（优先覆盖 must_have / should_have）
 
 输出 JSON：
 {
@@ -63,6 +71,7 @@ export default async function handler(req, res) {
       ok: true,
       analysis,
       jobs: cleaned,
+      cluster,
       total_jobs: jobs.length,
     });
   } catch (e) {

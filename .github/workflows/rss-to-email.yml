@@ -2,8 +2,8 @@ name: AI RSS → 邮件推送
 
 on:
   schedule:
-    # UTC 0/12 = CST 8/20
-    - cron: '0 0,12 * * *'
+    # 每天北京时间 08:00 = UTC 00:00（仅一次）
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
