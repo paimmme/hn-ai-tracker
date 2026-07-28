@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { inject } from '@vercel/analytics'
 import { PRACTICE_PROJECTS } from '../lib/jobs.mjs'
 
 const loading = ref(true)
@@ -10,6 +11,7 @@ const levelFilter = ref('all') // all | 必备 | 重要 | 加分
 const onlyPlanned = ref(false)
 
 onMounted(async () => {
+  inject()
   try {
     // 优先读周更缓存；失败则用规则库兜底
     const r = await fetch('/skills/data.json', { cache: 'no-store' })

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { inject } from '@vercel/analytics'
 import { useApi } from './composables/useApi.js'
 import HeroSection from './components/HeroSection.vue'
 import SkillTree from './components/SkillTree.vue'
@@ -21,7 +22,10 @@ const tabs = [
   { id: 'learn', label: '🎯 学习路线' },
 ]
 
-onMounted(() => fetchData())
+onMounted(() => {
+  fetchData()
+  inject()
+})
 
 const hasData = computed(() => data.value && (data.value.skill_tree?.length || data.value.cluster))
 </script>
