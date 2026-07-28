@@ -1,16 +1,27 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/skills", "destination": "/index.html" },
-    { "source": "/skills/", "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/projects", "destination": "/projects.html" },
+    { "source": "/projects/", "destination": "/projects.html" },
+    { "source": "/skills/data.json", "destination": "/skills/data.json" },
+    { "source": "/skills", "destination": "/projects.html" },
+    { "source": "/skills/", "destination": "/projects.html" }
   ],
   "headers": [
     {
       "source": "/api/jobs",
       "headers": [
         { "key": "Cache-Control", "value": "s-maxage=600, stale-while-revalidate=60" }
+      ]
+    },
+    {
+      "source": "/skills/data.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "s-maxage=300, stale-while-revalidate=60" }
       ]
     }
   ]

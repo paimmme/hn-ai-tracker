@@ -1,7 +1,9 @@
 node_modules/
 n8n-workflow.json
 dist/
+public/skills/
 skills/data.json
 .env
 .env.local
 .env.*.local
+.vercel

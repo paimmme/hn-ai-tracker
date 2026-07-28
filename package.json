@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "dev:projects": "vite --open /projects.html",
+    "prebuild": "node scripts/prepare-static.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "email": "node scripts/rss-to-email.mjs",

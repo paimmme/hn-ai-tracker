@@ -90,11 +90,23 @@ ALLOWED_ORIGIN=https://your-app.vercel.app   # 可选，限制 CORS
 | `QQ_SMTP_PASS` | QQ SMTP 授权码 |
 | `DEEPSEEK_API_KEY` | DeepSeek API Key |
 
+## 部署到 Vercel
+
+详细步骤见 **[DEPLOY.md](./DEPLOY.md)**（含教育认证、环境变量、路径说明）。
+
+摘要：
+
+1. Vercel 用 GitHub 登录 → Import `paimmme/hn-ai-tracker`  
+2. 配置：`DEEPSEEK_API_KEY`、`DEEPSEEK_MODEL=deepseek-v4-flash`、`ANALYZE_API_KEY`  
+3. Deploy 后访问 `/` 与 `/projects`  
+4. 邮件/周更仍由 GitHub Actions 负责，Secrets 配在仓库里  
+
 ## Vercel 环境变量
 
 | 变量 | 用途 |
 |------|------|
 | `DEEPSEEK_API_KEY` | `/api/analyze` |
+| `DEEPSEEK_MODEL` | 建议 `deepseek-v4-flash` |
 | `ANALYZE_API_KEY` | **生产环境必填**，否则 analyze 接口拒绝公开调用 |
 | `ALLOWED_ORIGIN` | 可选，限制 CORS 源 |
 
