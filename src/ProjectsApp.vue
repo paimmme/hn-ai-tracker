@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 import { PRACTICE_PROJECTS } from '../lib/jobs.mjs'
 
 const loading = ref(true)
@@ -218,6 +219,7 @@ function copyText(text) {
       本地页 · 数据来自 <code>skills/data.json</code> · 规则库兜底
       <code>PRACTICE_PROJECTS</code>
     </footer>
+    <SpeedInsights />
   </div>
 </template>
 

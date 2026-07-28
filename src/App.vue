@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from './composables/useApi.js'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 import HeroSection from './components/HeroSection.vue'
 import SkillTree from './components/SkillTree.vue'
 import SkillRadar from './components/SkillRadar.vue'
@@ -71,6 +72,7 @@ const hasData = computed(() => data.value && (data.value.skill_tree?.length || d
         · <a href="/projects.html" style="color:#1e40af">练手项目看板</a>
       </p>
     </footer>
+    <SpeedInsights />
   </div>
 </template>
 
