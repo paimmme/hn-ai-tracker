@@ -41,10 +41,25 @@ skills/data.json     周更分析结果（Action force-add）
 
 ```bash
 npm install
-npm run dev          # Vite http://localhost:5173
+npm run dev              # 主站 http://localhost:5173/
+npm run dev:projects     # 练手项目看板 http://localhost:5173/projects.html
 npm run build
-npm run email        # 需 QQ_EMAIL / QQ_SMTP_PASS / DEEPSEEK_API_KEY
-npm run analyze      # 需 DEEPSEEK_API_KEY（可选，无 key 仅写聚类）
+npm run email            # 需 QQ_EMAIL / QQ_SMTP_PASS / DEEPSEEK_API_KEY
+npm run analyze          # 需 DEEPSEEK_API_KEY（可选，无 key 仅写聚类+项目）
+```
+
+### 配置 DeepSeek（终端）
+
+```bash
+cd /Users/wangjie/hn-ai-tracker
+cp .env.example .env.local
+# 编辑 .env.local，填入 DEEPSEEK_API_KEY=sk-...
+
+# 当前 shell 临时加载后跑脚本（Node 不会自动读 .env.local）：
+set -a && source .env.local && set +a
+npm run analyze
+# 或一行：
+# export $(grep -v '^#' .env.local | xargs) && npm run analyze
 ```
 
 前端默认请求 `/api/*`。本地联调 API：

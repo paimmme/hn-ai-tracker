@@ -66,7 +66,10 @@ const hasData = computed(() => data.value && (data.value.skill_tree?.length || d
     </div>
 
     <footer class="footer">
-      <p>数据来源：国聘网 · 分析模型：DeepSeek v4-flash · 西交管科 秋招备战</p>
+      <p>
+        数据来源：国聘网 · 分析模型：DeepSeek v4-flash · 西交管科 秋招备战
+        · <a href="/projects.html" style="color:#1e40af">练手项目看板</a>
+      </p>
     </footer>
   </div>
 </template>

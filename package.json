@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:projects": "vite --open /projects.html",
     "build": "vite build",
     "preview": "vite preview",
     "email": "node scripts/rss-to-email.mjs",
